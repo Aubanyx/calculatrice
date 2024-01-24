@@ -1,0 +1,67 @@
+body {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: lightslategray;
+  font-family: Roboto, serif;
+
+  .app {
+    background: darkgray;
+    border-radius: 1rem;
+    padding: 2rem;
+
+    .display {
+      margin-bottom: 2rem;
+      text-align: left;
+      background: lightgray;
+
+      .history {
+        background: darkgray;
+        height: 10rem;
+        max-height: 10rem;
+        padding-left: 0.5rem;
+        padding-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        overflow-y: auto;
+        font-size: 2rem;
+
+        div {
+          margin-bottom: 0.5rem;
+        }
+      }
+
+      .input {
+        background: white;
+        height: 5rem;
+        display: flex;
+        align-items: center;
+        padding-left: 0.5rem;
+        font-size: 3rem;
+        font-weight: bold;
+      }
+    }
+
+    .button-grid {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      max-width: 40rem;
+
+      .button {
+        flex: 0 0 20%;
+        margin: 0.5rem;
+        width: 5rem;
+        height: 5rem;
+        border: 1px solid darkslategray;
+        border-radius: 0.5rem;
+        font-size: 1.5rem;
+      }
+    }
+  }
+}

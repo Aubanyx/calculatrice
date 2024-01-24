@@ -1,29 +1,67 @@
-// import logo from './logo.svg';
+import React, { useState } from 'react'
+import Display from './components/Display'
+import Button from './components/Button'
 import './assets/scss/reset.scss'
-// import './App.css';
-import Calculatrice from './components/Calculatrice'
+import './assets/scss/App.scss'
 
 function App() {
+  const [input, setInput] = useState('')
+  const [history, setHistory] = useState([])
+
+  const handleButtonClick = (value) => {
+    if (value === '=') {
+      try {
+        const result = eval(input)
+        setHistory([...history, `${input} = ${result}`])
+        setInput(String(result))
+      } catch (error) {
+        setInput('Erreur')
+      }
+    } else if (value === 'C') {
+      setInput('')
+    } else if (value === '←') {
+      setInput(input.slice(0, -1))
+    } else if (value === '%') {
+      setInput(input + '/100')
+    } else {
+      setInput(input + value)
+    }
+  }
+
+  // Exemple simple de boutons pour la calculatrice
+  const buttons = [
+    '←',
+    'C',
+    '(',
+    ')',
+    '7',
+    '8',
+    '9',
+    '/',
+    '4',
+    '5',
+    '6',
+    '*',
+    '1',
+    '2',
+    '3',
+    '-',
+    '0',
+    '.',
+    '%',
+    '+',
+    '=',
+  ]
+
   return (
-    <main>
-      <Calculatrice />
+    <main className="app">
+      <Display input={input} history={history} />
+      <div className="button-grid">
+        {buttons.map((btn, index) => (
+          <Button key={index} onClick={handleButtonClick} text={btn} />
+        ))}
+      </div>
     </main>
-    // <div className="App">
-    //   <header className="App-header">
-    //     <img src={logo} className="App-logo" alt="logo" />
-    //     <p>
-    //       Edit <code>src/App.js</code> and save to reload.
-    //     </p>
-    //     <a
-    //       className="App-link"
-    //       href="https://reactjs.org"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       Learn React
-    //     </a>
-    //   </header>
-    // </div>
   )
 }
 
