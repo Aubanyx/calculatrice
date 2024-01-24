@@ -1,14 +1,14 @@
 // import logo from './logo.svg';
 import './assets/scss/reset.scss'
 // import './App.css';
-import Calculatrice from "./components/Calculatrice";
+import Calculatrice from './components/Calculatrice'
 
 function App() {
   return (
-      <main>
-        <Calculatrice />
-      </main>
-      // <div className="App">
+    <main>
+      <Calculatrice />
+    </main>
+    // <div className="App">
     //   <header className="App-header">
     //     <img src={logo} className="App-logo" alt="logo" />
     //     <p>
@@ -24,7 +24,7 @@ function App() {
     //     </a>
     //   </header>
     // </div>
-  );
+  )
 }
 
-export default App;
+export default App
