@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { evaluate } from 'mathjs'
 import Display from './components/Display'
 import Button from './components/Button'
 import './assets/scss/reset.scss'
@@ -11,24 +12,25 @@ function App() {
   const handleButtonClick = (value) => {
     if (value === '=') {
       try {
-        const result = eval(input)
+        const expression = input.replace(/,/g, '.').replace(/%/g, '/100')
+        const result = evaluate(expression)
         setHistory([...history, `${input} = ${result}`])
-        setInput(String(result))
+        setInput('')
       } catch (error) {
         setInput('Erreur')
       }
     } else if (value === 'C') {
       setInput('')
+    } else if (value === 'AC') {
+      setInput('')
+      setHistory([])
     } else if (value === '←') {
       setInput(input.slice(0, -1))
-    } else if (value === '%') {
-      setInput(input + '/100')
     } else {
       setInput(input + value)
     }
   }
 
-  // Exemple simple de boutons pour la calculatrice
   const buttons = [
     '←',
     'C',
@@ -47,9 +49,10 @@ function App() {
     '3',
     '-',
     '0',
-    '.',
+    ',',
     '%',
     '+',
+    'AC',
     '=',
   ]
 
