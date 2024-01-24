@@ -12,12 +12,17 @@ function App() {
   const handleButtonClick = (value) => {
     if (value === '=') {
       try {
-        const expression = input.replace(/,/g, '.').replace(/%/g, '/100')
-        const result = evaluate(expression)
-        setHistory([...history, `${input} = ${result}`])
-        setInput('')
+        // Validation de l'expression avant de l'évaluer
+        if (isValidExpression(input)) {
+          const expression = input.replace(/,/g, '.').replace(/%/g, '/100')
+          const result = evaluate(expression)
+          setHistory([...history, `${input} = ${result}`])
+          setInput('')
+        } else {
+          throw new Error('Expression invalide')
+        }
       } catch (error) {
-        setInput('Erreur')
+        setInput('Expression invalide')
       }
     } else if (value === 'C') {
       setInput('')
@@ -29,6 +34,14 @@ function App() {
     } else {
       setInput(input + value)
     }
+  }
+
+  const isValidExpression = (expression) => {
+    // Vérifier les virgules consécutives
+    if (expression.includes(',,') || /[\+\-\*\/]{2,}/.test(expression)) {
+      return false
+    }
+    return true
   }
 
   const buttons = [
