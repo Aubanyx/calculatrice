@@ -8,8 +8,23 @@ import './assets/scss/App.scss'
 function App() {
   const [input, setInput] = useState('')
   const [history, setHistory] = useState([])
+  const [isError, setIsError] = useState(false)
 
   const handleButtonClick = (value) => {
+    // Bloque les nouvelles entrées si l'état actuel est une erreur
+    if (isError) {
+      if (value === 'C' || value === 'AC') {
+        setInput('')
+        setIsError(false) // Réinitialiser l'état d'erreur
+      }
+      return
+    }
+
+    if (value === '=' && !input) {
+      // Ne rien faire si l'input est vide
+      return
+    }
+
     if (value === '=') {
       try {
         const validation = isValidExpression(input)
@@ -19,24 +34,19 @@ function App() {
 
         const expression = input.replace(/,/g, '.').replace(/%/g, '/100')
         let result = evaluate(expression)
-
-        // Assurez-vous que le résultat n'est pas undefined avant de convertir
-        if (result !== undefined) {
-          // Remplacer les points par des virgules pour la sortie
-          result = result.toString().replace('.', ',')
-          setHistory([...history, `${input} = ${result}`])
-          setInput('')
-        } else {
-          throw new Error('Expression invalide')
-        }
+        result = result.toString().replace('.', ',')
+        setHistory([...history, `${input} = ${result}`])
+        setInput('')
       } catch (error) {
-        setInput(error.message) // Affiche le message d'erreur spécifique
+        setInput(error.message)
+        setIsError(true) // Définir l'état d'erreur
       }
-    } else if (value === 'C') {
+    } else if (value === 'C' || value === 'AC') {
       setInput('')
-    } else if (value === 'AC') {
-      setInput('')
-      setHistory([])
+      setIsError(false) // Réinitialiser l'état d'erreur également ici
+      if (value === 'AC') {
+        setHistory([])
+      }
     } else if (value === '←') {
       setInput(input.slice(0, -1))
     } else {
@@ -45,6 +55,11 @@ function App() {
   }
 
   const isValidExpression = (expression) => {
+    // Vérifie si l'expression est vide ou ne contient que des virgules ou des pourcentages
+    if (!expression || /^[%\s,]+$/.test(expression)) {
+      return { valid: false, error: 'Expression invalide' }
+    }
+
     // Vérifie s'il y a des caractères non autorisés
     if (/[^0-9+\-*/(),.%]/.test(expression))
       return { valid: false, error: 'Caractères non valides' }
@@ -60,7 +75,7 @@ function App() {
       return { valid: false, error: 'Opérateurs consécutifs' }
 
     // Vérifie si l'expression commence ou se termine par un opérateur
-    if (/^[+\-*/.]|.*[+\-*/.]$/.test(expression))
+    if (/^[%+\-*/.]|.*[+\-*/.]$/.test(expression))
       return { valid: false, error: 'Commence ou termine par un opérateur' }
 
     // Vérifie les parenthèses mal appariées
@@ -84,6 +99,16 @@ function App() {
   useEffect(() => {
     const handleKeyPress = (event) => {
       event.preventDefault() // Empêche le comportement par défaut du navigateur
+
+      // Bloque les entrées supplémentaires si l'état actuel est une erreur
+      if (isError) {
+        if (event.key === 'Escape') {
+          // Correspond à 'C' pour effacer
+          handleButtonClick('C')
+        }
+        return
+      }
+
       const key = event.key
       switch (key) {
         case 'Enter':
