@@ -42,13 +42,13 @@ function App() {
       return { valid: false, error: 'Caractères non valides' }
 
     // Vérifie si un nombre contient plus d'une virgule
-    const parts = expression.split(/[\+\-\*\/()]/) // Sépare par les opérateurs
+    const parts = expression.split(/[+\-*/()]/) // Sépare par les opérateurs
     if (parts.some((part) => (part.match(/,/g) || []).length > 1)) {
       return { valid: false, error: 'Trop de virgule dans un nombre' }
     }
 
     // Vérifie les opérateurs consécutifs
-    if (/[\+\-\*\/]{2,}/.test(expression))
+    if (/[+\-*/]{2,}/.test(expression))
       return { valid: false, error: 'Opérateurs consécutifs' }
 
     // Vérifie si l'expression commence ou se termine par un opérateur
@@ -73,60 +73,60 @@ function App() {
     return stack.length === 0
   }
 
-  const handleKeyPress = (event) => {
-    event.preventDefault() // Empêche le comportement par défaut du navigateur
-    const key = event.key
-    switch (key) {
-      case 'Enter':
-        if (input) {
-          // Vérifiez si l'input n'est pas vide avant d'appeler handleButtonClick
-          handleButtonClick('=')
-        }
-        break
-      case 'Escape':
-        handleButtonClick('C')
-        break
-      case 'Backspace':
-        handleButtonClick('←')
-        break
-      case ',':
-        handleButtonClick(',')
-        break
-      case '/':
-        handleButtonClick('/')
-        break
-      case '*':
-        handleButtonClick('*')
-        break
-      case '-':
-        handleButtonClick('-')
-        break
-      case '+':
-        handleButtonClick('+')
-        break
-      case '(':
-        handleButtonClick('(')
-        break
-      case ')':
-        handleButtonClick(')')
-        break
-      case '%':
-        handleButtonClick('%')
-        break
-      default:
-        if ('0123456789'.includes(key)) {
-          handleButtonClick(key)
-        }
-        break
-    }
-  }
-
   useEffect(() => {
+    const handleKeyPress = (event) => {
+      event.preventDefault() // Empêche le comportement par défaut du navigateur
+      const key = event.key
+      switch (key) {
+        case 'Enter':
+          if (input) {
+            // Vérifiez si l'input n'est pas vide avant d'appeler handleButtonClick
+            handleButtonClick('=')
+          }
+          break
+        case 'Escape':
+          handleButtonClick('C')
+          break
+        case 'Backspace':
+          handleButtonClick('←')
+          break
+        case ',':
+          handleButtonClick(',')
+          break
+        case '/':
+          handleButtonClick('/')
+          break
+        case '*':
+          handleButtonClick('*')
+          break
+        case '-':
+          handleButtonClick('-')
+          break
+        case '+':
+          handleButtonClick('+')
+          break
+        case '(':
+          handleButtonClick('(')
+          break
+        case ')':
+          handleButtonClick(')')
+          break
+        case '%':
+          handleButtonClick('%')
+          break
+        default:
+          if ('0123456789'.includes(key)) {
+            handleButtonClick(key)
+          }
+          break
+      }
+    }
+
     window.addEventListener('keydown', handleKeyPress)
     return () => {
       window.removeEventListener('keydown', handleKeyPress)
     }
-  }, [handleKeyPress])
+  })
 
   const buttons = [
     '←',
