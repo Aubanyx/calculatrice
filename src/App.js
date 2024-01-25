@@ -20,11 +20,15 @@ function App() {
         const expression = input.replace(/,/g, '.').replace(/%/g, '/100')
         let result = evaluate(expression)
 
-        // Remplacer les points par des virgules pour la sortie
-        result = result.toString().replace('.', ',')
-
-        setHistory([...history, `${input} = ${result}`])
-        setInput('')
+        // Assurez-vous que le résultat n'est pas undefined avant de convertir
+        if (result !== undefined) {
+          // Remplacer les points par des virgules pour la sortie
+          result = result.toString().replace('.', ',')
+          setHistory([...history, `${input} = ${result}`])
+          setInput('')
+        } else {
+          throw new Error('Expression invalide')
+        }
       } catch (error) {
         setInput(error.message) // Affiche le message d'erreur spécifique
       }
