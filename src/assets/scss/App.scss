@@ -1,4 +1,5 @@
 body {
+  font-family: Roboto, serif;
   height: 100vh;
   width: 100%;
   display: flex;
@@ -7,7 +8,6 @@ body {
   align-items: center;
   text-align: center;
   background: lightslategray;
-  font-family: Roboto, serif;
 
   .app {
     background: darkgray;
@@ -17,13 +17,12 @@ body {
     .display {
       margin-bottom: 2rem;
       text-align: left;
-      background: lightgray;
       font-size: 2rem;
 
       .history {
         background: darkgray;
-        height: 10rem;
-        max-height: 10rem;
+        height: 15rem;
+        max-height: 15rem;
         padding-left: 0.5rem;
         padding-bottom: 1rem;
         display: flex;
@@ -62,6 +61,7 @@ body {
         border-radius: 0.5rem;
         font-size: 1.5rem;
         flex-grow: 1;
+        cursor: pointer;
       }
     }
   }
