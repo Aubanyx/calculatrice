@@ -18,7 +18,11 @@ function App() {
         }
 
         const expression = input.replace(/,/g, '.').replace(/%/g, '/100')
-        const result = evaluate(expression)
+        let result = evaluate(expression)
+
+        // Remplacer les points par des virgules pour la sortie
+        result = result.toString().replace('.', ',')
+
         setHistory([...history, `${input} = ${result}`])
         setInput('')
       } catch (error) {
