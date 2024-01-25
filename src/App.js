@@ -12,17 +12,17 @@ function App() {
   const handleButtonClick = (value) => {
     if (value === '=') {
       try {
-        // Validation de l'expression avant de l'évaluer
-        if (isValidExpression(input)) {
-          const expression = input.replace(/,/g, '.').replace(/%/g, '/100')
-          const result = evaluate(expression)
-          setHistory([...history, `${input} = ${result}`])
-          setInput('')
-        } else {
-          throw new Error('Expression invalide')
+        const validation = isValidExpression(input)
+        if (!validation.valid) {
+          throw new Error(validation.error)
         }
+
+        const expression = input.replace(/,/g, '.').replace(/%/g, '/100')
+        const result = evaluate(expression)
+        setHistory([...history, `${input} = ${result}`])
+        setInput('')
       } catch (error) {
-        setInput('Expression invalide')
+        setInput(error.message) // Affiche le message d'erreur spécifique
       }
     } else if (value === 'C') {
       setInput('')
@@ -37,11 +37,40 @@ function App() {
   }
 
   const isValidExpression = (expression) => {
-    // Vérifier les virgules consécutives
-    if (expression.includes(',,') || /[\+\-\*\/]{2,}/.test(expression)) {
-      return false
+    // Vérifie s'il y a des caractères non autorisés
+    if (/[^0-9+\-*/(),.%]/.test(expression))
+      return { valid: false, error: 'Caractères non valides' }
+
+    // Vérifie si un nombre contient plus d'une virgule
+    const parts = expression.split(/[\+\-\*\/()]/) // Sépare par les opérateurs
+    if (parts.some((part) => (part.match(/,/g) || []).length > 1)) {
+      return { valid: false, error: 'Trop de virgule dans un nombre' }
     }
-    return true
+
+    // Vérifie les opérateurs consécutifs
+    if (/[\+\-\*\/]{2,}/.test(expression))
+      return { valid: false, error: 'Opérateurs consécutifs' }
+
+    // Vérifie si l'expression commence ou se termine par un opérateur
+    if (/^[+\-*/.]|.*[+\-*/.]$/.test(expression))
+      return { valid: false, error: 'Commence ou termine par un opérateur' }
+
+    // Vérifie les parenthèses mal appariées
+    if (!areParenthesesBalanced(expression))
+      return { valid: false, error: 'Parenthèses mal appariées' }
+
+    return { valid: true, error: '' }
+  }
+
+  const areParenthesesBalanced = (expression) => {
+    const stack = []
+    for (let char of expression) {
+      if (char === '(') stack.push(char)
+      else if (char === ')') {
+        if (!stack.pop()) return false
+      }
+    }
+    return stack.length === 0
   }
 
   const buttons = [
